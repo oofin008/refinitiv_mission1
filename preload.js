@@ -1,5 +1,13 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
+console.log('== preload ==');
+
+const { contextBridge } = require('electron');
+
+contextBridge.exposeInMainWorld('api', {
+  deleteFile: f => require('fs').unlink(f)
+})
+
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)

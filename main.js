@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 
 function createWindow () {
@@ -8,24 +8,16 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
+      nodeIntegration:true,
       preload: path.join(__dirname, 'preload.js')
     }
   });
-
-  const childWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
-    parent: mainWindow,
-  });
-
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
-  childWindow.loadFile('index_child.html')
+  mainWindow.webContents.openDevTools();
+  mainWindow.maximize();
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
   console.log('== App ready ==');
@@ -42,4 +34,8 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
   console.log('app quit');
+})
+
+ipcMain.handle('perform-action', (event, ...args) => {
+  // ... do actions on behalf of the Renderer
 })

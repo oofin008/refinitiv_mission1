@@ -3,8 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <title>Main window</title>
   </head>
   <body>
@@ -13,11 +11,10 @@
     Chromium <span id="chrome-version"></span>,
     and Electron <span id="electron-version"></span>.
 
-    <button class="demo-button" id="new-window">View Demo</button>
+    <button id="new-window">View Demo</button>
+    <pre><code data-path="renderer-process/renderer.js"></code></pre>
 
     <!-- You can also require other files to run in this process -->
-    <script type="text/javascript">
-      require('./renderer.js')
-    </script>
+    <script type="text/javascript" src="renderer-process/renderer.js"></script>
   </body>
 </html>
