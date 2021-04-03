@@ -7,7 +7,8 @@ let mainWindow = null;
 
 function initialize () {
 
-  loadMainProcess();
+  // loadMainProcess();
+  require('./ main-process/communication/async-msg');
 
   function createWindow () {
     // Create the browser window.
@@ -16,15 +17,18 @@ function initialize () {
       height: 600,
       webPreferences: {
         nodeIntegration:true,
-        webSecurity: false,
-        contextIsolation: true,
-        preload: path.join(__dirname, 'preload.js')
+        // preload: path.join(__dirname, 'preload.js')
+        preload: path.join(__dirname, '/renderer-process/async-msg.js')
       }
     });
     // and load the index.html of the app.
     mainWindow.loadFile('index.html')
     mainWindow.webContents.openDevTools();
     mainWindow.maximize();
+
+    mainWindow.on('closed', () => {
+      mainWindow = null
+    })
   }
 
   app.whenReady().then(() => {
@@ -43,9 +47,11 @@ function initialize () {
   })
 }
 
-function loadMainProcess() {
-  const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
-  files.forEach((file) => { require(file) })
-}
+// function loadMainProcess() {
+//   console.log('== load Main-process ==')
+//   const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
+//   console.log('files => ', files);
+//   files.forEach((file) => { require(file) })
+// }
 
 initialize();

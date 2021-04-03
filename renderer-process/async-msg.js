@@ -1,12 +1,17 @@
-// const {ipcRenderer} = require('electron');
-import {ipcRenderer} from 'electron';
-const asyncMsgBtn = document.getElementById('new-window');
+const { ipcRenderer } = require("electron");
 
-asyncMsgBtn.addEventListener('click', () => {
-  ipcRenderer.send('asynchronous-message', 'ping')
-})
+console.info("preload - async-msg load success");
 
-ipcRenderer.on('asynchronous-reply', (event, arg) => {
-  const message = `Asynchronous message reply: ${arg}`
-  document.getElementById('async-reply').innerHTML = message
-})
+window.addEventListener("DOMContentLoaded", () => {
+  const asyncMsgBtn = document.getElementById("new-window");
+  asyncMsgBtn.addEventListener("click", () => {
+    console.log('*-- clicked');
+    ipcRenderer.send('asynchronous-message', "ping");
+  });
+
+  ipcRenderer.on('asynchronous-reply', (event, arg) => {
+    const message = `Asynchronous message reply: ${arg}`;
+    document.getElementById("async-reply").innerHTML = message;
+    console.log('*-- async reply => ', message);
+  });
+});
