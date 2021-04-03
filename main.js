@@ -6,8 +6,6 @@ const glob = require('glob')
 let mainWindow = null;
 
 function initialize () {
-
-  // loadMainProcess();
   require('./ main-process/communication/async-msg');
 
   function createWindow () {
@@ -46,12 +44,5 @@ function initialize () {
     console.log('app quit');
   })
 }
-
-// function loadMainProcess() {
-//   console.log('== load Main-process ==')
-//   const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
-//   console.log('files => ', files);
-//   files.forEach((file) => { require(file) })
-// }
 
 initialize();
