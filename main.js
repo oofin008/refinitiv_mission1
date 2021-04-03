@@ -1,12 +1,11 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow } = require('electron')
 const path = require('path')
-const glob = require('glob')
 
 let mainWindow = null;
 
 function initialize () {
-  require('./ main-process/communication/async-msg');
+  require('./main-process/ipc-message');
 
   function createWindow () {
     // Create the browser window.
@@ -15,8 +14,9 @@ function initialize () {
       height: 600,
       webPreferences: {
         nodeIntegration:true,
-        // preload: path.join(__dirname, 'preload.js')
-        preload: path.join(__dirname, '/renderer-process/async-msg.js')
+        contextIsolation: false,
+        enableRemoteModule: true,
+        preload: path.join(__dirname, 'preload.js')
       }
     });
     // and load the index.html of the app.
@@ -26,7 +26,7 @@ function initialize () {
 
     mainWindow.on('closed', () => {
       mainWindow = null
-    })
+    });
   }
 
   app.whenReady().then(() => {
