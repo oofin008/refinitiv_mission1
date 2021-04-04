@@ -7,8 +7,6 @@ let childWindow = null;
 let isAppQuitting = false;
 
 function initialize() {
-  // require('./main-process/ipc-message');
-
   function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
