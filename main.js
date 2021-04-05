@@ -34,12 +34,13 @@ function initialize() {
       childWindow.webContents.send("show-answer", arg);
     });
 
+    mainWindow.on('close', () => {
+      console.log('mainWindow closing...')
+      isAppQuitting = true;
+    });
     mainWindow.on("closed", () => {
       console.log('mainWindow closed...')
       mainWindow = null;
-      isAppQuitting = true;
-      childWindow.close();
-      childWindow = null;
     });
 
     childWindow.on('close', (event) => {
@@ -47,7 +48,13 @@ function initialize() {
         console.log('childWindow hiding...')
         event.preventDefault();
         childWindow.hide();
+      } else {
+        console.log('childWindow closing...')
       }
+    });
+    childWindow.on('closed', () => {
+      console.log('childWindow closed...')
+      childWindow = null;
     })
   }
 
@@ -63,7 +70,7 @@ function initialize() {
 
   app.on("window-all-closed", function () {
     if (process.platform !== "darwin") app.quit();
-    console.log("app quit");
+    console.log("== App quit ==");
   });
 
   app.on("before-quit", function () {
@@ -73,6 +80,7 @@ function initialize() {
 }
 
 function createChildwindow() {
+  isAppQuitting = false;
   childWindow = new BrowserWindow({
     width: 400,
     height: 320,
