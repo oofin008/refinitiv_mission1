@@ -22,7 +22,7 @@ function initialize() {
     mainWindow.loadFile("index.html");
     // mainWindow.webContents.openDevTools();
 
-    createChildwindow();
+    createChildwindow(mainWindow);
     // childWindow.webContents.openDevTools();
 
     // Attach IPC event
@@ -75,16 +75,17 @@ function initialize() {
   });
 
   app.on("before-quit", function () {
-    console.log('quitting...')
     isAppQuitting = true;
+    console.log('quitting...')
   });
 }
 
-function createChildwindow() {
+function createChildwindow(parentWindow) {
   isAppQuitting = false;
   childWindow = new BrowserWindow({
     width: 400,
     height: 320,
+    parent: parentWindow,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
