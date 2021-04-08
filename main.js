@@ -20,10 +20,10 @@ function initialize() {
       },
     });
     mainWindow.loadFile("index.html");
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     createChildwindow();
-    childWindow.webContents.openDevTools();
+    // childWindow.webContents.openDevTools();
 
     // Attach IPC event
     ipcMain.on("open-answer", (event, arg) => {
