@@ -25,6 +25,7 @@ function initialize() {
     createChildwindow();
     childWindow.webContents.openDevTools();
 
+    // Attach IPC event
     ipcMain.on("open-answer", (event, arg) => {
       if (childWindow === null) {
         console.log("child");

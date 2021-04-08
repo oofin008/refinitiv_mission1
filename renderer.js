@@ -1,17 +1,26 @@
 const { ipcRenderer } = require("electron");
-const { BrowserWindow } = require("electron").remote;
-const path = require("path");
 
-const questionContainer = document.getElementById('question-container');
+const questionContainer = document.getElementById("question-container");
 
-for(let i =0; i<10; i++) {
-  const btn = document.createElement('button');
-  btn.id = i;
-  btn.textContent = i;
-  questionContainer.appendChild(btn);
+async function preloadQuestion () {
+  let data = [];
+  const result = await window.fetch('http://localhost:3000/getquestion');
+  data = await result.json();
+  return data.data;
+
 }
-questionContainer.addEventListener('click', (e) => {
-  if(e.target && e.target.nodeName === "BUTTON"){
-    ipcRenderer.send('open-answer', e.target.id);
+
+preloadQuestion().then(result => {
+  for(let i =0; i < result.length; i++) {
+    const btn = document.createElement("button");
+    btn.id = result[i].id;
+    btn.innerText = result[i].question;
+    questionContainer.appendChild(btn);
   }
 })
+
+questionContainer.addEventListener("click", (e) => {
+  if (e.target && e.target.nodeName === "BUTTON") {
+    ipcRenderer.send("open-answer", e.target.id);
+  }
+});
