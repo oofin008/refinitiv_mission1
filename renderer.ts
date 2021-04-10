@@ -1,4 +1,5 @@
-const { ipcRenderer } = require("electron");
+// const { ipcRenderer } = require('electron');
+import { ipcRenderer } from 'electron';
 
 const questionContainer = document.getElementById("question-container");
 
@@ -16,12 +17,16 @@ loadQuestion().then(result => {
     btn.id = result[i].id;
     btn.innerText = result[i].question;
     btn.setAttribute("answerid", result[i].answerId);
-    questionContainer.appendChild(btn);
+    questionContainer!.appendChild(btn);
   }
 })
 
-questionContainer.addEventListener("click", (e) => {
+// @ts-ignore: Unreachable code error
+questionContainer!.addEventListener("click", (e) => {
+  // @ts-ignore: Unreachable code error
   if (e.target && e.target.nodeName === "BUTTON") {
+    // @ts-ignore: Unreachable code error
     ipcRenderer.send("open-answer", e.target.getAttribute('answerid'));
   }
 });
+

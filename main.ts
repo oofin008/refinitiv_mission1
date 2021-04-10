@@ -2,9 +2,9 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
-let mainWindow = null;
-let childWindow = null;
-let isAppQuitting = false;
+let mainWindow:any = null;
+let childWindow:any = null;
+let isAppQuitting:boolean = false;
 
 function initialize() {
   function createWindow() {
@@ -20,16 +20,16 @@ function initialize() {
       },
     });
     mainWindow.loadFile("index.html");
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     createChildwindow(mainWindow);
-    // childWindow.webContents.openDevTools();
+    childWindow.webContents.openDevTools();
 
     // Attach IPC event
-    ipcMain.on("open-answer", (event, arg) => {
+    ipcMain.on("open-answer", (event :any, arg :any) => {
       if (childWindow === null) {
         console.log("child");
-        createChildwindow();
+        createChildwindow(mainWindow);
       }
       childWindow.show();
       childWindow.webContents.send("show-answer", arg);
@@ -44,7 +44,7 @@ function initialize() {
       mainWindow = null;
     });
 
-    childWindow.on('close', (event) => {
+    childWindow.on('close', (event:any) => {
       if(!isAppQuitting){
         console.log('childWindow hiding...')
         event.preventDefault();
@@ -80,7 +80,7 @@ function initialize() {
   });
 }
 
-function createChildwindow(parentWindow) {
+function createChildwindow(parentWindow:any) {
   isAppQuitting = false;
   childWindow = new BrowserWindow({
     width: 400,
