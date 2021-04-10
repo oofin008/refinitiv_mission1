@@ -2,8 +2,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 
-let mainWindow:BrowserWindow | null = null;
-let childWindow:BrowserWindow | null = null;
+let mainWindow:BrowserWindow | undefined = undefined;
+let childWindow:BrowserWindow | undefined = undefined;
 let isAppQuitting:boolean = false;
 
 function initialize() {
@@ -26,8 +26,8 @@ function initialize() {
     // childWindow!.webContents.openDevTools();
 
     // Attach IPC event
-    ipcMain.on("open-answer", (event :any, arg :any) => {
-      if (childWindow === null) {
+    ipcMain.on("open-answer", (event :Event, arg :any) => {
+      if (childWindow === null || childWindow === undefined) {
         console.log("child");
         createChildwindow(mainWindow);
       }
@@ -41,10 +41,10 @@ function initialize() {
     });
     mainWindow.on("closed", () => {
       console.log('mainWindow closed...')
-      mainWindow = null;
+      mainWindow = undefined;
     });
 
-    childWindow!.on('close', (event:any) => {
+    childWindow!.on('close', (event:Event) => {
       if(!isAppQuitting){
         console.log('childWindow hiding...')
         event.preventDefault();
@@ -55,7 +55,7 @@ function initialize() {
     });
     childWindow!.on('closed', () => {
       console.log('childWindow closed...')
-      childWindow = null;
+      childWindow = undefined;
     })
   }
 
@@ -80,7 +80,7 @@ function initialize() {
   });
 }
 
-function createChildwindow(parentWindow:any) {
+function createChildwindow(parentWindow:BrowserWindow | undefined) {
   isAppQuitting = false;
   childWindow = new BrowserWindow({
     width: 400,
