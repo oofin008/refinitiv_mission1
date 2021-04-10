@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron';
 
 const questionContainer = document.getElementById("question-container");
 
-async function loadQuestion () {
+const loadQuestion = async () => {
   let data = [];
   const result = await window.fetch('http://localhost:3000/getquestion');
   data = await result.json();

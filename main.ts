@@ -1,9 +1,9 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("path");
+import { app, BrowserWindow, ipcMain } from 'electron';
+import * as path from 'path';
 
-let mainWindow:any = null;
-let childWindow:any = null;
+let mainWindow:BrowserWindow | null = null;
+let childWindow:BrowserWindow | null = null;
 let isAppQuitting:boolean = false;
 
 function initialize() {
@@ -20,10 +20,10 @@ function initialize() {
       },
     });
     mainWindow.loadFile("index.html");
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     createChildwindow(mainWindow);
-    childWindow.webContents.openDevTools();
+    // childWindow!.webContents.openDevTools();
 
     // Attach IPC event
     ipcMain.on("open-answer", (event :any, arg :any) => {
@@ -31,8 +31,8 @@ function initialize() {
         console.log("child");
         createChildwindow(mainWindow);
       }
-      childWindow.show();
-      childWindow.webContents.send("show-answer", arg);
+      childWindow!.show();
+      childWindow!.webContents.send("show-answer", arg);
     });
 
     mainWindow.on('close', () => {
@@ -44,16 +44,16 @@ function initialize() {
       mainWindow = null;
     });
 
-    childWindow.on('close', (event:any) => {
+    childWindow!.on('close', (event:any) => {
       if(!isAppQuitting){
         console.log('childWindow hiding...')
         event.preventDefault();
-        childWindow.hide();
+        childWindow!.hide();
       } else {
         console.log('childWindow closing...')
       }
     });
-    childWindow.on('closed', () => {
+    childWindow!.on('closed', () => {
       console.log('childWindow closed...')
       childWindow = null;
     })
