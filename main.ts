@@ -6,8 +6,8 @@ let mainWindow:BrowserWindow | undefined = undefined;
 let childWindow:BrowserWindow | undefined = undefined;
 let isAppQuitting:boolean = false;
 
-function initialize() {
-  function createWindow() {
+const initialize = ():void => {
+  const createWindow = ():void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
       width: 800,
@@ -26,7 +26,7 @@ function initialize() {
     // childWindow!.webContents.openDevTools();
 
     // Attach IPC event
-    ipcMain.on("open-answer", (event :Event, arg :any) => {
+    ipcMain.on("open-answer", (event :Electron.IpcMainEvent, arg :any):void => {
       if (childWindow === null || childWindow === undefined) {
         console.log("child");
         createChildwindow(mainWindow);
@@ -35,16 +35,16 @@ function initialize() {
       childWindow!.webContents.send("show-answer", arg);
     });
 
-    mainWindow.on('close', () => {
+    mainWindow.on('close', ():void => {
       console.log('mainWindow closing...')
       isAppQuitting = true;
     });
-    mainWindow.on("closed", () => {
+    mainWindow.on("closed", ():void => {
       console.log('mainWindow closed...')
       mainWindow = undefined;
     });
 
-    childWindow!.on('close', (event:Event) => {
+    childWindow!.on('close', (event:Electron.Event):void => {
       if(!isAppQuitting){
         console.log('childWindow hiding...')
         event.preventDefault();
@@ -53,34 +53,34 @@ function initialize() {
         console.log('childWindow closing...')
       }
     });
-    childWindow!.on('closed', () => {
+    childWindow!.on('closed', ():void => {
       console.log('childWindow closed...')
       childWindow = undefined;
     })
   }
 
-  app.whenReady().then(() => {
+  app.whenReady().then(():void => {
     createWindow();
     console.log("== App ready ==");
-    app.on("activate", function () {
+    app.on("activate", ():void => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
   });
 
-  app.on("window-all-closed", function () {
+  app.on("window-all-closed", ():void => {
     if (process.platform !== "darwin") app.quit();
     console.log("== App quit ==");
   });
 
-  app.on("before-quit", function () {
+  app.on("before-quit", ():void => {
     isAppQuitting = true;
     console.log('quitting...')
   });
 }
 
-function createChildwindow(parentWindow:BrowserWindow | undefined) {
+const createChildwindow = (parentWindow:BrowserWindow | undefined):void => {
   isAppQuitting = false;
   childWindow = new BrowserWindow({
     width: 400,

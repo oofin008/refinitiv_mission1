@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 
-async function getAnswer(id: string):Promise<answerDataType> {
+const getAnswer = async (id: string):Promise<answerDataType> => {
   const result = await window.fetch(`http://localhost:3000/getanswer/${id}`);
   const data = await result.json();
   return data.data;
