@@ -1,37 +1,37 @@
-// const { ipcRenderer } = require('electron');
 import { ipcRenderer } from 'electron';
 
 const questionContainer: Element | null = document.getElementById("question-container");
 
 const loadQuestion = async ():Promise<questionDataType[]> => {
   let data = [];
-  const result = await window.fetch('http://localhost:3000/getquestion');
-  data = await result.json();
-  return data.data;
-
+  try {
+    const result = await window.fetch('http://localhost:3000/getquestion');
+    data = await result.json();
+    return data.data;
+  } catch (error) {
+    throw new Error("cannot fetch data from server");
+  }
 };
 
 loadQuestion().then((result: questionDataType[]):void => {
-  if (questionContainer !== null && questionContainer !== undefined) {
-    for(let i =0; i < result.length; i++) {
-      const btn = document.createElement("button");
-      btn.id = result[i].id;
-      btn.innerText = result[i].question;
-      btn.setAttribute("answerid", result[i].answerId);
+  if (questionContainer !== null) {
+    result.map((val: questionDataType):void => {
+      const btn:HTMLElement = document.createElement("button");
+      btn.id = val.id;
+      btn.innerText = val.question;
+      btn.setAttribute("answerid", val.answerId);
       questionContainer.appendChild(btn);
+    });
+  }
+}).catch((error: Error) => console.log('error fetch question =>', error));
+
+if (questionContainer !== null) {
+  questionContainer.addEventListener("click", (e: any):void => {
+    if (e.target && e.target.nodeName === "BUTTON") {
+      ipcRenderer.send("open-answer", e.target.getAttribute('answerid'));
     }
-  }
-});
-
-// @ts-ignore: Unreachable code error
-questionContainer.addEventListener("click", (e: Event):void => {
-  // @ts-ignore: Unreachable code error
-  if (e.target && e.target.nodeName === "BUTTON") {
-    // @ts-ignore: Unreachable code error
-    ipcRenderer.send("open-answer", e.target.getAttribute('answerid'));
-  }
-});
-
+  });
+};
 interface questionDataType {
   id: string;
   question: string;
