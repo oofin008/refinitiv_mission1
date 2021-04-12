@@ -9,7 +9,7 @@ const loadQuestion = async ():Promise<questionDataType[]> => {
   data = await result.json();
   return data.data;
 
-}
+};
 
 loadQuestion().then((result: questionDataType[]):void => {
   if (questionContainer !== null && questionContainer !== undefined) {
@@ -21,7 +21,7 @@ loadQuestion().then((result: questionDataType[]):void => {
       questionContainer.appendChild(btn);
     }
   }
-})
+});
 
 // @ts-ignore: Unreachable code error
 questionContainer.addEventListener("click", (e: Event):void => {

@@ -36,28 +36,28 @@ const initialize = ():void => {
     });
 
     mainWindow.on('close', ():void => {
-      console.log('mainWindow closing...')
+      console.log('mainWindow closing...');
       isAppQuitting = true;
     });
     mainWindow.on("closed", ():void => {
-      console.log('mainWindow closed...')
+      console.log('mainWindow closed...');
       mainWindow = undefined;
     });
 
     childWindow!.on('close', (event:Electron.Event):void => {
       if(!isAppQuitting){
-        console.log('childWindow hiding...')
+        console.log('childWindow hiding...');
         event.preventDefault();
         childWindow!.hide();
       } else {
-        console.log('childWindow closing...')
+        console.log('childWindow closing...');
       }
     });
     childWindow!.on('closed', ():void => {
-      console.log('childWindow closed...')
+      console.log('childWindow closed...');
       childWindow = undefined;
-    })
-  }
+    });
+  };
 
   app.whenReady().then(():void => {
     createWindow();
@@ -76,9 +76,9 @@ const initialize = ():void => {
 
   app.on("before-quit", ():void => {
     isAppQuitting = true;
-    console.log('quitting...')
+    console.log('quitting...');
   });
-}
+};
 
 const createChildwindow = (parentWindow:BrowserWindow | undefined):void => {
   isAppQuitting = false;
@@ -94,6 +94,6 @@ const createChildwindow = (parentWindow:BrowserWindow | undefined):void => {
     show: false,
   });
   childWindow.loadFile("modal.html");
-}
+};
 
 initialize();
