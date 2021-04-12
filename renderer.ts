@@ -1,21 +1,22 @@
 import { ipcRenderer } from 'electron';
+import { QuestionType } from './objTypes';
 
 const questionContainer: Element | null = document.getElementById("question-container");
 
-const loadQuestion = async ():Promise<questionDataType[]> => {
+const loadQuestion = async ():Promise<QuestionType[]> => {
   let data = [];
   try {
     const result = await window.fetch('http://localhost:3000/getquestion');
     data = await result.json();
     return data.data;
   } catch (error) {
-    throw new Error("cannot fetch data from server");
+    throw new Error("Error, cannot fetch question from server");
   }
 };
 
-loadQuestion().then((result: questionDataType[]):void => {
+loadQuestion().then((result: QuestionType[]):void => {
   if (questionContainer !== null) {
-    result.map((val: questionDataType):void => {
+    result.map((val: QuestionType):void => {
       const btn:HTMLElement = document.createElement("button");
       btn.id = val.id;
       btn.innerText = val.question;
@@ -32,8 +33,3 @@ if (questionContainer !== null) {
     }
   });
 };
-interface questionDataType {
-  id: string;
-  question: string;
-  answerId: string;
-}

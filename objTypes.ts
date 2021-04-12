@@ -1,15 +1,15 @@
 export interface APIresponseTypes {
   success: boolean;
-  data: QuestionModel[] | AnswerModel | [] | {};
+  data: QuestionType[] | AnswerType | [] | {};
 }
 
-export interface QuestionModel {
+export interface QuestionType {
   id: string;
   question: string;
   answerId: string;
 }
 
-export interface AnswerModel {
+export interface AnswerType {
   id: string;
   answer: string;
 }

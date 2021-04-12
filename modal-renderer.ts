@@ -1,13 +1,18 @@
 import { ipcRenderer } from 'electron';
+import { AnswerType } from './objTypes';
 
-const getAnswer = async (id: string):Promise<answerDataType> => {
-  const result = await window.fetch(`http://localhost:3000/getanswer/${id}`);
-  const data = await result.json();
-  return data.data;
+const getAnswer = async (id: string):Promise<AnswerType> => {
+  try{
+    const result = await window.fetch(`http://localhost:3000/getanswer/${id}`);
+    const data = await result.json();
+    return data.data;
+  } catch (error) {
+    throw new Error("Error, cannot fetch answer from server");
+  }
 };
 
 ipcRenderer.on('show-answer', (event:Electron.IpcRendererEvent, arg:any):void => {
-  getAnswer(arg).then( (result:answerDataType) => {
+  getAnswer(arg).then( (result:AnswerType) => {
     const message = `Answer id: ${result.id} data: ${result.answer}`;
     document.getElementById('modal-message')!.innerHTML = message;
   }).catch(() => {
@@ -15,8 +20,3 @@ ipcRenderer.on('show-answer', (event:Electron.IpcRendererEvent, arg:any):void =>
     document.getElementById('modal-message')!.innerHTML = message;
   });
 });
-
-interface answerDataType {
-  id: string;
-  answer: string;
-}
