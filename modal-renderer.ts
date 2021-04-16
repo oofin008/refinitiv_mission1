@@ -3,7 +3,7 @@ import { AnswerType } from './objTypes';
 
 const getAnswer = async (id: string):Promise<AnswerType> => {
   try{
-    const result = await window.fetch(`http://localhost:3000/getanswer/${id}`);
+    const result = await window.fetch(`${process.env.BASE_URL}/getanswer/${id}`);
     const data = await result.json();
     return data.data;
   } catch (error) {

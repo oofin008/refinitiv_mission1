@@ -6,7 +6,7 @@ const questionContainer: Element | null = document.getElementById("question-cont
 const loadQuestion = async ():Promise<QuestionType[]> => {
   let data = [];
   try {
-    const result = await window.fetch('http://localhost:3000/getquestion');
+    const result = await window.fetch(`${process.env.BASE_URL}/getquestion`);
     data = await result.json();
     return data.data;
   } catch (error) {
