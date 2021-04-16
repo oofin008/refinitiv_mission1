@@ -6,7 +6,7 @@
   ],
   "rules": {
     "no-var": "error",
-    "eqeqeq": "error",
+    "eqeqeq": ["error", "always",{"null": "ignore"}],
     "semi": "error"
   }
 }

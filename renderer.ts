@@ -14,6 +14,11 @@ const loadQuestion = async ():Promise<QuestionType[]> => {
   }
 };
 
+const closeChildWindow = ():void => {
+  ipcRenderer.send("no-action");
+};
+let timerId = setTimeout(closeChildWindow, 5000);
+
 loadQuestion().then((result: QuestionType[]):void => {
   if (questionContainer !== null) {
     result.map((val: QuestionType):void => {
@@ -26,10 +31,12 @@ loadQuestion().then((result: QuestionType[]):void => {
   }
 }).catch((error: Error) => console.log('error fetch question =>', error));
 
-if (questionContainer !== null) {
+if (questionContainer != null) {
   questionContainer.addEventListener("click", (e: any):void => {
     if (e.target && e.target.nodeName === "BUTTON") {
+      clearTimeout(timerId);
       ipcRenderer.send("open-answer", e.target.getAttribute('answerid'));
+      timerId = setTimeout(closeChildWindow, 5000);
     }
   });
 };

@@ -1,7 +1,9 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 let mainWindow:BrowserWindow | undefined = undefined;
 let childWindow:BrowserWindow | undefined = undefined;
 let isAppQuitting:boolean = false;
@@ -20,19 +22,26 @@ const initialize = ():void => {
       },
     });
     mainWindow.loadFile("index.html");
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     createChildwindow(mainWindow);
-    // childWindow!.webContents.openDevTools();
+    childWindow!.webContents.openDevTools();
 
     // Attach IPC event
-    ipcMain.on("open-answer", (event :Electron.IpcMainEvent, arg :any):void => {
-      if (childWindow === null || childWindow === undefined) {
+    ipcMain.on("open-answer", (event: Electron.IpcMainEvent, arg: any):void => {
+      if (childWindow == null) {
         console.log("child");
         createChildwindow(mainWindow);
       }
       childWindow!.show();
       childWindow!.webContents.send("show-answer", arg);
+    });
+
+    ipcMain.on("no-action", (event: Electron.IpcMainEvent, arg: any):void => {
+      if ( childWindow != null){
+        console.log('Timeout childWindow');
+        childWindow.hide();
+      }
     });
 
     mainWindow.on('close', ():void => {
